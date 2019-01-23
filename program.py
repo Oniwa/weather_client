@@ -18,6 +18,20 @@ def get_html_from_web(zipcode):
     return response.text
 
 
+def cleanup_text(text: str):
+    if not text:
+        return text
+
+    text = text.strip()
+
+    return text
+
+
+def find_city_and_state_from_location(loc: str):
+    parts = loc.split('\n')
+    return parts[0].strip()
+
+
 def get_weather_from_html(html):
     soup = bs4.BeautifulSoup(html, 'html.parser')
     # cityCss ='.region-content-header h1'
@@ -32,7 +46,13 @@ def get_weather_from_html(html):
     scale = soup.find(class_='wu-unit-temperature').find(
         class_='wu-label').get_text()
 
-    print(loc, condition, temp, scale)
+    loc = cleanup_text(loc)
+    loc = find_city_and_state_from_location(loc)
+    condition = cleanup_text(condition)
+    temp = cleanup_text(temp)
+    scale = cleanup_text(scale)
+
+    print(condition, temp, scale, loc)
 
 
 def main():
