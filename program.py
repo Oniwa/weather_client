@@ -1,5 +1,9 @@
 import requests
 import bs4
+import collections
+
+WeatherReport = collections.namedtuple('WeatherReport',
+                                       'cond, temp, scale, loc')
 
 
 def print_the_header():
@@ -52,19 +56,21 @@ def get_weather_from_html(html):
     temp = cleanup_text(temp)
     scale = cleanup_text(scale)
 
-    print(condition, temp, scale, loc)
+    report = WeatherReport(cond=condition, loc=loc, temp=temp, scale=scale)
+    return report
 
 
 def main():
     print_the_header()
 
     zipcode = input('What zipcode do you want the weather for (64836) ')
-    print(zipcode)
 
     html = get_html_from_web(zipcode)
     
-    get_weather_from_html(html)
-    # display for the forecast
+    report = get_weather_from_html(html)
+
+    print(f'The temp in {report.loc} is {report.temp} {report.scale} '
+          f'and {report.cond}')
 
 
 if __name__ == '__main__':
