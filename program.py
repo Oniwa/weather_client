@@ -1,4 +1,5 @@
 import requests
+import bs4
 
 
 def print_the_header():
@@ -17,6 +18,23 @@ def get_html_from_web(zipcode):
     return response.text
 
 
+def get_weather_from_html(html):
+    soup = bs4.BeautifulSoup(html, 'html.parser')
+    # cityCss ='.region-content-header h1'
+    # weatherScaleCss = '.wu-unit-temperature.wu-label'
+    # weather TempCss = '.wu-unit-temperature.wu-value'
+    # weatherConditionCss = '.condition-icon'
+
+    loc = soup.find(class_='region-content-header').find('h1').get_text()
+    condition = soup.find(class_='condition-icon').get_text()
+    temp = soup.find(class_='wu-unit-temperature').find(
+        class_='wu-value').get_text()
+    scale = soup.find(class_='wu-unit-temperature').find(
+        class_='wu-label').get_text()
+
+    print(loc, condition, temp, scale)
+
+
 def main():
     print_the_header()
 
@@ -24,7 +42,8 @@ def main():
     print(zipcode)
 
     html = get_html_from_web(zipcode)
-    # parse the html
+    
+    get_weather_from_html(html)
     # display for the forecast
 
 
